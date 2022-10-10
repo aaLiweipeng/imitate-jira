@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { cleanObject } from "utils";
+import { cleanObject, useDebounce, useMount } from "utils";
 import { List } from "./list";
 import { SearchPanel } from "./search-panel";
 import * as qs from "qs";
@@ -15,27 +15,28 @@ export const ProjectListScreen = () => {
     personId: "", // 负责人
   });
 
+  const debouncedParam = useDebounce(param, 2000)
   // 项目列表
   const [list, setList] = useState([]);
 
   useEffect(() => {
     // input或select值 有变化时，获取项目列表
     fetch(
-      `${apiUrl}/projects?${qs.stringify(cleanObject(param))}`
+      `${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`
     ).then(async (response) => {
       if (response.ok) {
         setList(await response.json());
       }
     });
-  }, [param]);
+  }, [debouncedParam]);
 
-  useEffect(() => {
+  useMount(() => {
     fetch(`${apiUrl}/users`).then(async (response) => {
       if (response.ok) {
         setUsers(await response.json());
       }
     });
-  }, [])
+  })
 
   return (
     <div>

@@ -4,7 +4,7 @@ import { List } from "./list";
 import { SearchPanel } from "./search-panel";
 import * as qs from "qs";
 
-const apiUrl = process.env.REACT_APP_API_URL
+const apiUrl = process.env.REACT_APP_API_URL;
 
 export const ProjectListScreen = () => {
   const [users, setUsers] = useState([]);
@@ -15,7 +15,7 @@ export const ProjectListScreen = () => {
     personId: "", // 负责人
   });
 
-  const debouncedParam = useDebounce(param, 2000)
+  const debouncedParam = useDebounce(param, 2000);
   // 项目列表
   const [list, setList] = useState([]);
 
@@ -36,7 +36,7 @@ export const ProjectListScreen = () => {
         setUsers(await response.json());
       }
     });
-  })
+  });
 
   return (
     <div>

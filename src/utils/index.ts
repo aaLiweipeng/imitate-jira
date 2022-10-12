@@ -6,18 +6,19 @@ import { useEffect, useState } from "react";
 // 因Boolean(0) === false, !0 是true，按!value的逻辑，0会被当成空值使用！！！
 // 而0是实值，显然不能用!value处理，
 // 所以，这里专门搞这个函数来处理0，遇到0值，直接返回false
-export const isFalsy = (value) => (value === 0 ? false : !value);
+export const isFalsy = (value: any) => (value === 0 ? false : !value);
 
 // tip: 在一个函数里，改变传入的对象本身是不好的
 // 本函数 用于 清除一个对象中的空值键值对
-export const cleanObject = (object) => {
+export const cleanObject = (object: object) => {
   // Object.assign({}, object)
   const result = { ...object }; // tip: 将对象解构成键值对集合，妙啊
 
   Object.keys(result).forEach((key) => {
-    // 0
+    // @ts-ignore
     const value = result[key];
     if (isFalsy(value)) {
+      // @ts-ignore
       delete result[key];
     }
   });
@@ -25,7 +26,7 @@ export const cleanObject = (object) => {
   return result;
 };
 
-export const useMount = (callback) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
   }, []);
@@ -65,7 +66,7 @@ export const useMount = (callback) => {
  *
  * @return 一个被封装了防抖特性的 value！
  */
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value: any, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {

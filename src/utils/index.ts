@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 // 因Boolean(0) === false, !0 是true，按!value的逻辑，0会被当成空值使用！！！
 // 而0是实值，显然不能用!value处理，
 // 所以，这里专门搞这个函数来处理0，遇到0值，直接返回false
-export const isFalsy = (value: any) => (value === 0 ? false : !value);
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
 // tip: 在一个函数里，改变传入的对象本身是不好的
 // 本函数 用于 清除一个对象中的空值键值对
@@ -66,8 +66,9 @@ export const useMount = (callback: () => void) => {
  *
  * @return 一个被封装了防抖特性的 value！
  */
-export const useDebounce = (value: any, delay?: number) => {
+export const useDebounce = (value: unknown, delay?: number): any => {
   const [debouncedValue, setDebouncedValue] = useState(value);
+  // console.log(value.mayNotExist)
 
   useEffect(() => {
     // 每次在value变化以后，设置一个定时器

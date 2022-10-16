@@ -66,14 +66,16 @@ export const useMount = (callback: () => void) => {
  *
  * @return 一个被封装了防抖特性的 value！
  */
-export const useDebounce = (value: unknown, delay?: number): any => {
+export const useDebounce = <V>(value: V, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
   // console.log(value.mayNotExist)
 
   useEffect(() => {
-    // 每次在value变化以后，设置一个定时器
+    // 每次在value变化以后，设置一个定时器 延迟设值
     const timeout = setTimeout(() => setDebouncedValue(value), delay);
-    // 每次在上一个useEffect处理完以后再运行
+    // useEffect的特性
+    // 如果有下一个的useEffect的话，
+    // 在下一个useEffect运行前，运行return中的内容
     return () => clearTimeout(timeout);
   }, [value, delay]);
 

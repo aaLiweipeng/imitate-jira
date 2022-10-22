@@ -4,12 +4,26 @@
 import React, { ProviderProps, ReactNode, useState } from "react";
 import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-panel";
+import { http } from "utils/http";
+import { useMount } from "utils";
 
 // 定义数据类型
 interface AuthForm {
   username: string;
   password: string;
 }
+
+// 拿token去获取user
+const bootstrapUser = async () => {
+  let user = null;
+  const token = auth.getToken(); // 尝试从localStorage读取token
+  if (token) {
+    // 这里因为要自己传入token，就不用封装好的useAuth了, 直接用http()
+    const data = await http("me", { token });
+    user = data.user;
+  }
+  return user;
+};
 
 // 【这里类型定义 影响下面 AuthContext.Provider的 value属性】
 const AuthContext = React.createContext<
@@ -34,6 +48,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
   const logout = () => auth.logout().then(() => setUser(null));
+
+  // 初始化时候调用
+  useMount(() => {
+    bootstrapUser().then(setUser);
+  });
 
   // 向外分享
   return (

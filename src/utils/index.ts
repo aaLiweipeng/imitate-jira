@@ -26,6 +26,7 @@ export const cleanObject = (object: object) => {
   return result;
 };
 
+// 页面加载完成时初始化性质地执行
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();

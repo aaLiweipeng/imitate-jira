@@ -10,6 +10,7 @@ module.exports = (req, res, next) => {
     if (req.body.username === "super-admin" && req.body.password === "123456") {
       return res.status(200).json({
         user: {
+          name: "super-admin",
           token: "123",
         },
       });

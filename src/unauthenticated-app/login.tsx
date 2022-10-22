@@ -1,5 +1,8 @@
+/**
+ * 登录页
+ */
+import { useAuth } from "context/auth-context";
 import React, { FormEvent } from "react";
-import { cleanObject } from "utils";
 
 // interface Base {
 //   id: number
@@ -16,22 +19,23 @@ import { cleanObject } from "utils";
 // const a = {id: 1, name: 'jack'}
 // test(a)
 
-const apiUrl = process.env.REACT_APP_API_URL;
+// const apiUrl = process.env.REACT_APP_API_URL;
 
 export const LoginScreen = () => {
   // 登录业务方法
-  const login = (param: { username: string; password: string }) => {
-    fetch(`${apiUrl}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(param),
-    }).then(async (response) => {
-      if (response.ok) {
-      }
-    });
-  };
+  // const login = (param: { username: string; password: string }) => {
+  //   fetch(`${apiUrl}/login`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(param),
+  //   }).then(async (response) => {
+  //     if (response.ok) {
+  //     }
+  //   });
+  // };
+  const { login, user } = useAuth();
 
   // 点击方法 获取表单值 调用登录业务
   // HTMLFormElement extends Element
@@ -47,6 +51,12 @@ export const LoginScreen = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {user ? (
+        <div>
+          登录成功，用户名：{user?.name}
+          {user?.token}
+        </div>
+      ) : null}
       <div>
         <label htmlFor="username">用户名</label>
         <input type="text" id={"username"} />

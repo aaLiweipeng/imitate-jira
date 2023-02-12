@@ -1,5 +1,5 @@
 /**
- * 非登录状态的app
+ * 非登录状态的app【即 登录页】
  */
 import React, { useState } from "react";
 import { RegisterScreen } from "unauthenticated-app/register";

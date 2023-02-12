@@ -51,10 +51,11 @@ const PageHeader = () => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
+        <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
         {/* <ButtonNoPadding type={"link"} onClick={resetRoute}>
           <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
-        </ButtonNoPadding>
-        <ProjectPopover />
+        </ButtonNoPadding> */}
+        {/* <ProjectPopover />
         <UserPopover /> */}
         <h2>12</h2>
         <h2>23</h2>
@@ -70,24 +71,23 @@ const PageHeader = () => {
 const User = () => {
   const { logout, user } = useAuth();
   return (
-    <Button onClick={logout} type={"link"}>
-      登出
-    </Button>
-    // <Dropdown
-    //   overlay={
-    //     <Menu>
-    //       <Menu.Item key={"logout"}>
-    //         <Button onClick={logout} type={"link"}>
-    //           登出
-    //         </Button>
-    //       </Menu.Item>
-    //     </Menu>
-    //   }
-    // >
-    //   <Button type={"link"} onClick={(e) => e.preventDefault()}>
-    //     Hi, {user?.name}
-    //   </Button>
-    // </Dropdown>
+    // overlay 即 hover时的 下拉内容
+    <Dropdown
+      overlay={
+        <Menu>
+          <Menu.Item key={"logout"}>
+            <Button onClick={logout} type={"link"}>
+              登出
+            </Button>
+          </Menu.Item>
+        </Menu>
+      }
+    >
+      {/* 用于防止页面重新刷新 */}
+      <Button type={"link"} onClick={(e) => e.preventDefault()}>
+        Hi, {user?.name}
+      </Button>
+    </Dropdown>
   );
 };
 
@@ -101,8 +101,8 @@ const Container = styled.div`
 // grid-area 用来给grid子元素起名字
 const Header = styled(Row)`
   padding: 3.2rem;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1); // 阴影
-  z-index: 1;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1); // 阴影边框
+  z-index: 1; // 配合阴影边框
 `;
 const HeaderLeft = styled(Row)``;
 const HeaderRight = styled.div``;

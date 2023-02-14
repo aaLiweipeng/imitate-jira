@@ -6,19 +6,25 @@ import { useEffect, useState } from "react";
 // 因Boolean(0) === false, !0 是true，按!value的逻辑，0会被当成空值使用！！！
 // 而0是实值，显然不能用!value处理，
 // 所以，这里专门搞这个函数来处理0，遇到0值，直接返回false
+// bug：但如果一个键的值为false，如{ checked:false }, 这个key是有意义的，不能被删除
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
+/**
+ * 用意跟 isFalsy一样，判断是不是没意义的值
+ * 用来优化 isFalsy
+ */
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === "";
+
 // tip: 在一个函数里，改变传入的对象本身是不好的
-// 本函数 用于 清除一个对象中的空值键值对
-export const cleanObject = (object: object) => {
+// 本函数 用于 清除一个对象中的 其值为空的键值对
+export const cleanObject = (object: { [key: string]: unknown }) => {
   // Object.assign({}, object)
   const result = { ...object }; // tip: 将对象解构成键值对集合，妙啊
 
   Object.keys(result).forEach((key) => {
-    // @ts-ignore
     const value = result[key];
-    if (isFalsy(value)) {
-      // @ts-ignore
+    if (isVoid(value)) {
       delete result[key];
     }
   });
@@ -30,6 +36,8 @@ export const cleanObject = (object: object) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    // 用到了 callback，却没有依赖 callback，ts会报错，这里要加注释
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 

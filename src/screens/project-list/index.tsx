@@ -29,6 +29,9 @@ export const ProjectListScreen = () => {
     //   }
     // });
     client("projects", { data: cleanObject(debouncedParam) }).then(setList);
+
+    // 用到了 debouncedParam，却没有依赖 debouncedParam，ts会报错，这里要加注释
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedParam]);
 
   useMount(() => {

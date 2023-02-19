@@ -1,7 +1,7 @@
 // isFalsy 函数目的：
 //     遇null、undefined等空值，是要返回true的【即!value】，cleanObject 去清除对应的键值对
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // 因Boolean(0) === false, !0 是true，按!value的逻辑，0会被当成空值使用！！！
 // 而0是实值，显然不能用!value处理，
@@ -109,4 +109,20 @@ export const useArray = <T>(initialArray: T[]) => {
       setValue(copy);
     },
   };
+};
+
+/**
+ * 返回组件的挂载状态，如果还没挂载或者已经卸载，返回false；反之，返回true
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  });
+
+  return mountedRef;
 };

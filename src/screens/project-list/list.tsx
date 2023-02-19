@@ -1,5 +1,5 @@
 import { User } from "./search-panel";
-import { Table } from "antd";
+import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 
 interface Project {
@@ -11,12 +11,12 @@ interface Project {
   created: number;
 }
 
-interface ListProps {
-  list: Project[];
+interface ListProps extends TableProps<Project> {
   users: User[];
 }
 
-export const List = ({ list, users }: ListProps) => {
+// type PropsType = Omit<ListProps, 'users'> // 即 TableProps<Project>
+export const List = ({ users, ...props }: ListProps) => {
   return (
     <Table
       pagination={false}
@@ -56,7 +56,7 @@ export const List = ({ list, users }: ListProps) => {
           },
         },
       ]}
-      dataSource={list}
+      {...props}
     />
   );
 };

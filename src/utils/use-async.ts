@@ -35,6 +35,16 @@ const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
 
 /**
  * (对外接口开写)
+ * 封装异步处理，
+ *
+ * 用run接收Promise单元 并执行；
+ * 根据结果返回 isLoading, error, data【加载状态、错误信息、请求结果数据】
+ *
+ * 如此，
+ * 外部只需要 传入业务Promise，使用 运行结果 isLoading, error, data 去做处理 即可！
+ *
+ * 中间的 Promise运行，isLoading, error, data等状态整理，封装在此！
+ *
  * @param initialState 用户传入的state
  * @param initialConfig
  * @returns
@@ -95,6 +105,7 @@ export const useAsync = <D>(
 
       // stat 置为loading，开始运行
       safeDispatch({ stat: "loading" });
+
       return promise
         .then((data) => {
           // 异步操作发生完了，成功

@@ -29,8 +29,8 @@ export const List = ({ users, ...props }: ListProps) => {
             return (
               <span>
                 {/* users里边找找有没跟  project.personId 相同的id，有就返回这个user*/}
-                {users.find((user) => user.id === project.personId)?.name ||
-                  "未知"}
+                {users.find((user) => user.id === Number(project.personId))
+                  ?.name || "未知"}
               </span>
             );
           },

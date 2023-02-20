@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
-import { cleanObject, useDebounce, useMount } from "utils";
+import { useState } from "react";
+import { useDebounce } from "utils";
 import { List } from "./list";
 import { SearchPanel } from "./search-panel";
-import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
-import { useAsync } from "utils/use-async";
-import { Project } from "types/project";
+import { useProjects } from "utils/project";
+import { useUsers } from "utils/user";
 
+// 项目列表页面
 export const ProjectListScreen = () => {
-  const [users, setUsers] = useState([]);
-
   // 两个字段合二为一作为一个参数对象
   const [param, setParam] = useState({
     name: "", // 项目名
@@ -18,48 +16,23 @@ export const ProjectListScreen = () => {
   });
 
   const debouncedParam = useDebounce(param, 2000);
-  const client = useHttp();
-  const { run, isLoading, error, data: list } = useAsync<Project[]>();
-
-  useEffect(() => {
-    // input或select值 有变化时，获取项目列表
-    // fetch(
-    //   `${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`
-    // ).then(async (response) => {
-    //   if (response.ok) {
-    //     setList(await response.json());
-    //   }
-    // });
-
-    // client("projects", { data: cleanObject(debouncedParam) })
-    //   .then(setList)
-    //   .catch((error) => {
-    //     setList([]); // 错误时清空展示
-    //     setError(error);
-    //   })
-    //   .finally(() => setIsLoading(false));
-
-    run(client("projects", { data: cleanObject(debouncedParam) }));
-
-    // 用到了 debouncedParam，却没有依赖 debouncedParam，ts会报错，这里要加注释
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedParam]);
-
-  useMount(() => {
-    // fetch(`${apiUrl}/users`).then(async (response) => {
-    //   if (response.ok) {
-    //     setUsers(await response.json());
-    //   }
-    // });
-    client("users").then(setUsers);
-  });
+  const { isLoading, error, data: list } = useProjects(debouncedParam);
+  // useMount(() => {
+  //   // fetch(`${apiUrl}/users`).then(async (response) => {
+  //   //   if (response.ok) {
+  //   //     setUsers(await response.json());
+  //   //   }
+  //   // });
+  //   client("users").then(setUsers);
+  // });
+  const { data: users } = useUsers();
 
   return (
     <ListContainer>
       <h1>项目列表</h1>
 
       {/* 搜索框 */}
-      <SearchPanel users={users} param={param} setParam={setParam} />
+      <SearchPanel users={users || []} param={param} setParam={setParam} />
 
       {/* 出错信息处理展示 */}
       {error ? (
@@ -67,7 +40,7 @@ export const ProjectListScreen = () => {
       ) : null}
 
       {/* 表格列表 */}
-      <List loading={isLoading} users={users} dataSource={list || []} />
+      <List loading={isLoading} users={users || []} dataSource={list || []} />
     </ListContainer>
   );
 };
